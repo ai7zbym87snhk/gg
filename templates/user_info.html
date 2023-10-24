@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="icon" type="image/svg+xml" href="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png">
+    <title>GraphQL |UserInfo|</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            background-image: url('http://osxdaily.com/wp-content/uploads/2011/08/icloud-background.jpg');
+            background-size: cover; 
+            background-repeat: no-repeat; 
+            background-attachment: fixed; 
+        }
+
+        h1 {
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        strong {
+            font-weight: bold;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .repo-list {
+            margin-left: 20px;
+        }
+
+        .commit-list {
+            margin-left: 40px;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>GitHub User Info</h1>
+    <div class="container">
+        <h2>User Information:</h2>
+        <ul>
+            <li><strong>Name:</strong> {{ user_data.name }}</li>
+            <li><strong>Username:</strong> {{ user_data.login }}</li>
+            <li><strong>Bio:</strong> {{ user_data.bio }}</li>
+            <li><strong>Email:</strong> {{ user_data.email }}</li>
+            <img src="{{ user_data.avatarUrl }}" alt="User Profile">
+            <li><strong>GitHub Account created on:</strong> {{ user_data.createdAt.split('T')[0] }}</li>
+            <li><strong>Repositories:</strong>
+                <ul class="repo-list">
+                    {% for repo in user_data.repositories.nodes %}
+                        <li><strong>Repo Name:</strong> {{ repo.name }}</li>
+                        <li><strong>Description:</strong> {{ repo.description }}</li>
+                    {% endfor %}
+                </ul>
+            </li>
+        </ul>
+        <h2>User Commits:</h2>
+        <ul class="commit-list">
+            {% for repo in user_commits %}
+                <li><strong>{{ repo.name }}</strong>
+                    <ul>
+                        {% for commit in repo.defaultBranchRef.target.history.nodes %}
+                            <li>{{ commit.message }}</li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            {% endfor %}
+        </ul>
+        <h2>Commit History Heatmap</h2>
+        <img src="{{ url_for('display_heatmap', heatmap_data=heatmap_data) }}" alt="Commit History Heatmap">
+    </div>
+</body>
+</html>
